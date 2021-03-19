@@ -12,6 +12,7 @@ router.post("/create", (req, res) => {
     url,
     teammates,
     githubRepo,
+    images
   } = req.body;
 
   ProjectModel.create({
@@ -23,6 +24,7 @@ router.post("/create", (req, res) => {
     url,
     teammates,
     githubRepo,
+    images
   })
     .then((response) => res.status(200).json(response))
     .catch((err) =>
