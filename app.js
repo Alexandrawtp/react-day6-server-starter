@@ -17,12 +17,15 @@ app.use(session({
       maxAge: 1000*60*60*24 // expiring in 1 day
     },
     store: new MongoStore({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/ReactTodos",
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/portfolio",
       ttl: 60*60*24, // expiring in 1 day
     })
 }));
 
 const allRoutes = require('./routes');
+
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Middlewares
 app.use('/api', allRoutes);

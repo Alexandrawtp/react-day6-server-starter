@@ -25,7 +25,7 @@ router.post("/signup", (req, res) => {
     });
     return;
   }
-// Westy!@Hoji
+
   const myPassRegex = new RegExp(
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"
   );
@@ -51,13 +51,11 @@ router.post("/signup", (req, res) => {
     .catch((err) => {
       if (err.code === 11000) {
         res.status(400).json({
-          errorMessage: "This email already exists!",
-          message: err,
+          errorMessage: "This email already exists.",
         });
       } else {
         res.status(400).json({
           errorMessage: "Sorry, something went wrong. Please try again.",
-          message: err,
         });
       }
     });
@@ -70,7 +68,18 @@ router.post("/signin", (req, res) => {
 
   if (!email || !password) {
     res.status(400).json({
-      error: "Please fill in all fields.",
+      errorMessage: "Please fill in all fields."
+    });
+    return;
+  }
+
+  const myRegex = new RegExp(
+    /^[a-z0-9](?!.*?[^\na-z0-9]{2})[^\s@]+@[^\s@]+\.[^\s@]+[a-z0-9]$/
+  );
+
+  if (!myRegex.test(email)) {
+    res.status(400).json({
+      errorMessage: "Email format not correct",
     });
     return;
   }
@@ -79,30 +88,31 @@ router.post("/signin", (req, res) => {
     .then((userData) => {
       bcrypt
         .compare(password, userData.password)
-        .then((doesItMatch) => {
-          if (doesItMatch) {
+        .then((ifMatch) => {
+          if (ifMatch) {
             userData.passwordHash = "***";
             req.session.loggedInUser = userData;
             res.status(200).json(userData);
           }
           else {
             res.status(400).json({
-              error: "Passwords don't match",
+              errorMessage: "Passwords don't match",
             });
             return;
           }
         })
         .catch(() => {
           res.status(400).json({
-            error: "Email format not correct",
+            errorMessage: "Email format not correct",
+            message: err
           });
           return;
         });
     })
     .catch((err) => {
       res.status(400).json({
-        error: "Email does not exist",
-        message: err,
+        errorMessage: "Email does not exist",
+        message: err
       });
       return;
     });
@@ -120,16 +130,17 @@ const isLoggedIn = (req, res, next) => {
     next();
   } else {
     res.status(401).json({
-      message: "Unauthorized user",
-      code: 401,
+      errorMessage: "Unauthorized user",
+      code: 401
     });
   }
 };
 
 // will handle all get requests to http:localhost:5005/api/user
 
-router.get("/user", isLoggedIn, (req, res) => {
+router.get("/me", isLoggedIn, (req, res) => {
   res.status(200).json(req.session.loggedInUser);
+  console.log(req.session.loggedInUser._id)
 });
 
 module.exports = router;
