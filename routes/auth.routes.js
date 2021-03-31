@@ -138,9 +138,8 @@ const isLoggedIn = (req, res, next) => {
 
 // will handle all get requests to http:localhost:5005/api/user
 
-router.get("/me", isLoggedIn, (req, res) => {
-  res.status(200).json(req.session.loggedInUser);
-  console.log(req.session.loggedInUser._id)
+router.get("/me", (req, res) => {
+  res.status(200).json(req.session.loggedInUser.email);
 });
 
 module.exports = router;

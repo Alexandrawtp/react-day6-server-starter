@@ -9,8 +9,7 @@ let ProjectSchema = new mongoose.Schema({
     url: String,
     teammates: String,
     githubRepo: String,
-    images: String,
-    completed: Boolean
+    backgroundColor: Number
 })
 
 let ProjectModel = mongoose.model('project', ProjectSchema)

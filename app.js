@@ -24,8 +24,6 @@ app.use(session({
 
 const allRoutes = require('./routes');
 
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
 
 //Middlewares
 app.use('/api', allRoutes);
